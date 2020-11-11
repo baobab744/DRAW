@@ -8,7 +8,7 @@ collide = False
 collide1 = False
 num = 0
 num1 = 0
-speed_x, speed_y = 5, 5
+speed = [5, 5]
 FPS = 120
 clock = pygame.time.Clock()
 
@@ -40,6 +40,14 @@ ball = pygame.image.load('img/ball.png')
 ball_rect = ball.get_rect(topleft=(0, 0))
 print(ball_rect)
 
+def abc(x, y)
+    if ball_rect.left < 0 or ball_rect.right > WIDTH_WIN:
+        speed[0] = -x
+    elif ball_rect.top < 0 or ball_rect.bottom > HEIGHT_WIN:
+        speed[1] = -y
+    return ball_rect.move(speed)
+
+
 run = True
 while run:
     for e in pygame.event.get():
@@ -48,19 +56,6 @@ while run:
         elif e.type == pygame.MOUSEMOTION:
             rect1.center = e.pos
     ball_rect = ball_rect.move(speed_x, speed_y)
-    if ball_rect.left < 0 or ball_rect.right > WIDTH_WIN:
-        speed_x = -speed_x
-    if ball_rect.top < 0 or ball_rect.bottom > HEIGHT_WIN:
-        speed_y = -speed_y
-    screen.fill(BG)
-
-    COLOR = RED if collide or collide1 else BLUE
-
-    def move(speed_x, speed_y)
-        if ball_rect.left < 0 or ball_rect.right > WIDTH_WIN:
-            speed_x = -speed_x
-        if ball_rect.top < 0 or ball_rect.bottom > HEIGHT_WIN:
-            speed_y = -speed_y
 
     rect2 = pygame.draw.rect(screen, RED if collide else BLUE, (rect_pos, rect_size))
     screen.blit(surface, rect1)
@@ -68,17 +63,17 @@ while run:
     screen.blit(font.render(str(num), True, BLACK), (40, 25))
     screen.blit(font.render(str(num1), True, BLACK), (WIDTH_WIN - 40, 25))
     if rect1.colliderect(rect2):
-        collide = True
-        if COLOR == BLUE:
+        if not collide:
             num += 1
+            collide = True
     else:
         collide = False
     if ball_rect.colliderect(rect2):
-        collide1 = True
-        if COLOR == BLUE:
+        if not collide1:
             num1 += 1
+            collide1 = True
     else:
         collide1 = False
-
+    ball_rect = abc(speed[0], speed[1])
     pygame.display.update()
     clock.tick(FPS)
